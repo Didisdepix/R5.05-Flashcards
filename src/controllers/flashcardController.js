@@ -1,27 +1,27 @@
 export const createFlashcard = async (request, response) => {
-    
+    console.log("isOk")
 }
 
 export const getFlashcard = async (request, response) => {
-    
+    console.log("isOk")
 }
 
-export const getFlashcardsFromCollection = async (request, response) => {
-    
+export const getFlashcards = async (request, response) => {
+    console.log("isOk")
 }
 
-export const getFlashcardToLearnFromCollection = async (request, response) => {
-    
+export const getFlashcardsToLearn = async (request, response) => {
+    console.log("isOk")
 }
 
 export const modifyFlashcard = async (request, response) => {
-    
+    console.log("isOk")
 }
 
 export const deleteFlashcard = async (request, response) => {
-    
+    console.log("isOk")
 }
 
 export const learnFlashcard = async (request, response) => {
-    
+    console.log("isOk")
 }
