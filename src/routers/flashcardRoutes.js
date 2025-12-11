@@ -1,7 +1,7 @@
 import {Router} from 'express'
 import { createFlashcard, deleteFlashcard, getFlashcard, getFlashcards, getFlashcardsToLearn, learnFlashcard, modifyFlashcard } from '../controllers/flashcardController.js'
 
-const router = Router()
+const router = Router({mergeParams: true})
 
 router.post("/", createFlashcard)
 router.get("/:id", getFlashcard)
