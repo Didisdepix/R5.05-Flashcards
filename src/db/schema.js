@@ -29,7 +29,7 @@ export const flashcard = sqliteTable('flashcard', {
     id: string('id', {length: 36}).primaryKey().$defaultFn(() => randomUUID()),
     frontText: string('frontText', {length: 255}).notNull(),
     backText: string('backText', {length:255}).notNull(),
-    collectionId: string('collectionId', {length:36}).notNull().references(() => collection.id),
+    collectionId: string('collectionId', {length:36, onDelete: 'cascade'}).notNull().references(() => collection.id),
     frontURL: text('frontURL', {length:255}),
     backURL: text('backURL', {length:255}),
     createdAt: integer('created_at', {mode: 'timestamp'}).$defaultFn(()=> new Date())
@@ -44,6 +44,7 @@ export const revision = sqliteTable('revision', {
     foreignKey({
         columns: [table.flashcardId, table.userId],
         foreignColumns: [flashcard.id, table.id],
-        name: "custom_fk"
+        name: "custom_fk",
+        onDelete: 'cascade'
     })
 ])
