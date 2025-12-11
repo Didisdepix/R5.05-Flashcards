@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import { createCollection, deleteCollection, getCollection, getCollectionsFromTitle, getMyCollections, modifyCollection } from '../controllers/collectionController'
+import { createCollection, deleteCollection, getCollection, getCollectionsFromTitle, getMyCollections, modifyCollection } from '../controllers/collectionController.js'
 
 const router = Router()
 
