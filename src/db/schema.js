@@ -1,4 +1,4 @@
-import { sqliteTable, integer, text, boolean, foreignKey } from 'drizzle-orm/sqlite-core'
+import { sqliteTable, integer, text, boolean, foreignKey, primaryKey } from 'drizzle-orm/sqlite-core'
 import { randomUUID } from 'crypto'
 import { boolean, minLength } from 'zod'
 import { title } from 'process'
@@ -12,7 +12,7 @@ export const user = sqliteTable('user', {
     name: text('name'),
     // Je ne sais pas utiliser minLength
     password: text('password', {length:255, minLength:8}).notNull(),
-    admin: integer('admin', {mode: boolean}).default(false),
+    admin: integer('admin', {mode: 'boolean'}).default(false),
     createdAt: integer('created_at', {mode: 'timestamp'}).$defaultFn(()=> new Date()),
 })
 
@@ -20,7 +20,7 @@ export const collection = sqliteTable('collection', {
     id: text('id', {length: 36}).primaryKey().$defaultFn(() => randomUUID()),
     title: text('title', {length:255}).notNull(),
     description: text('description', {length:255}),
-    public: integer('public', {boolean}).notNull(),
+    public: integer('public', {mode: 'boolean'}).notNull(),
     createdAt: integer('created_at', {mode: 'timestamp'}).$defaultFn(()=> new Date()),
     userId: text('userId', {length:36}).references(() => user.id).notNull()
 })
@@ -41,10 +41,8 @@ export const revision = sqliteTable('revision', {
     lastRevisionDate: integer('lastRevisionDate', {mode: 'timestamp'}).$defaultFn(() => new Date()),
     level: integer('level', {enum: [1,2,3,4,5]}).notNull()
 }, (table) => [
-    foreignKey({
+    primaryKey({
+        name:"composed_pk",
         columns: [table.flashcardId, table.userId],
-        foreignColumns: [flashcard.id, user.id],
-        name: "custom_fk",
-        onDelete: 'cascade'
     })
 ])
