@@ -1,7 +1,6 @@
 import { user, collection, flashcard, revision} from './schema.js'
 import { db } from './database.js'
 import { email } from 'zod'
-import { use } from 'react'
 
 async function seed(){
     try{
@@ -62,3 +61,5 @@ async function seed(){
 
     }catch(error){console.error(error)}
 }
+
+seed()
