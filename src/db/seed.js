@@ -4,10 +4,10 @@ import { email } from 'zod'
 
 async function seed(){
     try{
-        await db.delete(user)
-        await db.delete(collection)
-        await db.delete(flashcard)
         await db.delete(revision)
+        await db.delete(flashcard)
+        await db.delete(collection)
+        await db.delete(user)
 
         const seedUser = [
             {
@@ -22,6 +22,13 @@ async function seed(){
                 name: "Lucas",
                 surname: "DEMAIMAY",
                 password: "test"
+            },
+            {
+                email:"clementcatel@gmail.com",
+                name: "Clement",
+                surname: "CATEL",
+                admin:1,
+                password: "mdpdur++"
             }
         ]
 
@@ -33,6 +40,12 @@ async function seed(){
                 public: 0,
                 userId:"1",
                 id: "2"
+            },
+            {
+                title : "Ma collec publique",
+                public: 1,
+                userId: "1",
+                id:"22"
             }
         ]
 
