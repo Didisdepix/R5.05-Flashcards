@@ -79,6 +79,21 @@ export const login = async (request, response) => {
 }
 
 export const getCurrentUser = async (request, response) => {
-    console.log("isOk")
-    response.send()
+    
+    try {
+        const [currentUser] =await db.select().from(user).where(eq(user.id, request.user.userId))
+
+        response.status(200).json({
+            email: currentUser.email,
+            name: currentUser.name,
+            surname: currentUser.surname
+        })
+
+    } catch (error) {
+        console.error(error)
+        response.status(500).json({
+            error: "Failed to get current user..."
+        })
+    }
+
 }
