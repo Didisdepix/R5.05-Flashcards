@@ -12,7 +12,7 @@ export const register = async (request, response) => {
 
         const hashedPassword = await hash(password, 15)
 
-        const [newUser] = await db.insert(usetTable).values({
+        const [newUser] = await db.insert(user).values({
             email,
             name,
             surname,

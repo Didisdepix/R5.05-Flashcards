@@ -1,4 +1,4 @@
-import { sqliteTable, integer, text, boolean, foreignKey, primaryKey } from 'drizzle-orm/sqlite-core'
+import { sqliteTable, integer, text, foreignKey, primaryKey } from 'drizzle-orm/sqlite-core'
 import { randomUUID } from 'crypto'
 import { boolean, minLength } from 'zod'
 import { title } from 'process'
