@@ -15,20 +15,20 @@ async function seed(){
                 email: "antoinerabute@gmail.com",
                 name: "Antoine",
                 surname: "RABUTE",
-                password: "iufgrehg"
+                password: hash("iufgrehg", 15)
             },
             {
                 email: "lucasdemaimay@gmail.com",
                 name: "Lucas",
                 surname: "DEMAIMAY",
-                password: "test"
+                password: hash("test", 15)
             },
             {
                 email:"clementcatel@gmail.com",
                 name: "Clement",
                 surname: "CATEL",
                 admin:1,
-                password: "mdpdur++"
+                password: hash("mdpdur++", 15)
             }
         ]
 
