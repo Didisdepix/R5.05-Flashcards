@@ -15,7 +15,7 @@ router.post('/', validateBody(createCollectionSchema),createCollection)
 router.get('/:id', validateParams(collectionIdSchema), getCollection)
 router.get('/', getMyCollections)
 router.get('/research', validateBody(researchSchema), getCollectionsFromTitle)
-router.patch('/', validateBody(modifyCollectionSchema), modifyCollection)
+router.patch('/:id', validateParams(modifyCollectionSchema),validateBody(modifyCollectionSchema), modifyCollection)
 router.delete('/:id', validateParams(collectionIdSchema), deleteCollection)
 
 export default router
