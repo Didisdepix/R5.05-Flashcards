@@ -5,7 +5,7 @@ export const createFlashcardSchema = z.object ({
     backText: z.string(),
     frontURL: z.url().optional(),
     backURL: z.url().optional(),
-    collection: z.uuid()
+    collectionId: z.uuid()
 })
 
 export const modifyFlashcardSchema = z.object ({

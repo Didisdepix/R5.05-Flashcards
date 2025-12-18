@@ -1,6 +1,7 @@
 import { user, collection, flashcard, revision} from './schema.js'
 import { db } from './database.js'
 import { email } from 'zod'
+import { hash } from 'bcrypt'
 
 async function seed(){
     try{
@@ -15,20 +16,20 @@ async function seed(){
                 email: "antoinerabute@gmail.com",
                 name: "Antoine",
                 surname: "RABUTE",
-                password: hash("iufgrehg", 15)
+                password: await hash("iufgrehg", 15)
             },
             {
                 email: "lucasdemaimay@gmail.com",
                 name: "Lucas",
                 surname: "DEMAIMAY",
-                password: hash("test", 15)
+                password: await hash("test", 15)
             },
             {
                 email:"clementcatel@gmail.com",
                 name: "Clement",
                 surname: "CATEL",
                 admin:1,
-                password: hash("mdpdur++", 15)
+                password: await hash("mdpdur++", 15)
             }
         ]
 
