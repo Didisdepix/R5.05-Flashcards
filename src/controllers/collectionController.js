@@ -38,8 +38,21 @@ export const getCollection = async (request, response) => {
 }
 
 export const getMyCollections = async (request, response) => {
-    console.log("isOk")
-    response.send()
+    try{
+        console.log("Retrieving collections...")
+
+        const id = request.user.userId
+
+        const collecs = await db.select().from(collection).where(eq(collection.userId, id)).returning()
+
+        response.send(200).json(collecs)
+    }catch(error){
+        console.error(error)
+        response.status(500).json({
+            error: "Failed to retrieve collections"
+        })
+    }
+    
 }
 
 export const getCollectionsFromTitle = async (request, response) => {
