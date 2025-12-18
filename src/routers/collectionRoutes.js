@@ -3,6 +3,7 @@ import { createCollection, deleteCollection, getCollection, getCollectionsFromTi
 import flashcardRoutes from './flashcardRoutes.js'
 import { validateBody, validateParams } from '../middlewares/validation.js'
 import { collectionIdSchema, createCollectionSchema, modifyCollectionSchema, researchSchema } from '../models/collection.js'
+import { authenticateToken } from '../middlewares/autenticateToken.js'
 
 const router = Router()
 

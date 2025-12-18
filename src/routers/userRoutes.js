@@ -2,6 +2,7 @@ import {Router} from 'express'
 import { deleteUser, getUser, getUsers } from '../controllers/userController.js'
 import { validateParams } from '../middlewares/validation.js'
 import { userIdSchema } from '../models/user.js'
+import { authenticateToken } from '../middlewares/autenticateToken.js'
 
 const router = Router()
 
