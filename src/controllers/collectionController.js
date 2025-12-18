@@ -1,6 +1,6 @@
 import { like } from "drizzle-orm"
 import { db } from "../db/database"
-import { collection } from "../db/schema"
+import { collection, user } from "../db/schema"
 
 export const createCollection = async (request, response) => {
     try{
@@ -26,7 +26,16 @@ export const getCollection = async (request, response) => {
 
         const id = request.params
 
-        const collec = await db.select().from(collection).where(eq(collection.id, id)).returning()
+        const [collec] = await db.select().from(collection).where(eq(collection.id, id)).returning()
+
+        if(collec.userId != request.user.userId){
+            const [user] = await db.select().from(user).where(eq(user.id, request.user.userId)).returning()
+            if(!user.admin){
+                response.status(403).json({
+                    error:"User not authorized"
+                })
+            }
+        }
 
         response.send(200).json(collec)
     }catch(error){
@@ -83,6 +92,15 @@ export const modifyCollection = async (request, response) => {
 
         await db.update(collection).set({title, description, public:isPublic}).where(eq(collection.id, id)).returning()
 
+        if(collec.userId != request.user.userId){
+            const [user] = await db.select().from(user).where(eq(user.id, request.user.userId)).returning()
+            if(!user.admin){
+                response.status(403).json({
+                    error:"User not authorized"
+                })
+            }
+        }
+
         response.send(200)
     }catch(error){
         console.error(error)
@@ -100,6 +118,15 @@ export const deleteCollection = async (request, response) => {
         const id = request.params
 
         await db.delete().from(collection).where(eq(collection.id, id))
+
+        if(collec.userId != request.user.userId){
+            const [user] = await db.select().from(user).where(eq(user.id, request.user.userId)).returning()
+            if(!user.admin){
+                response.status(403).json({
+                    error:"User not authorized"
+                })
+            }
+        }
 
         console.log("Collection deleted !")
     }catch(error){
