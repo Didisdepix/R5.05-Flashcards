@@ -74,7 +74,25 @@ export const modifyFlashcard = async (request, response) => {
 
 export const deleteFlashcard = async (request, response) => {
     try {
-        
+        const params = request.params
+        console.log(params.id)
+        const [targetFlashcard] = await db.select().from(flashcard).where(eq(flashcard.id, params.id))
+        console.log(targetFlashcard)
+        const [targetCollection] = await db.select().from(collection).where(eq(collection.id, targetFlashcard.collectionId))
+
+        if( targetCollection.userId != request.user.userId ) {
+            response.status(403).json({
+                error: "Unauthorized to create flashcard...",
+            })
+        }
+        const [deletedFlashcard] = await db.delete(flashcard).where(eq(flashcard.id, targetFlashcard.id)).returning()
+        if(!deletedFlashcard) {
+            return response.status(404).json({ error: "Flashcard not found..."})
+        }
+        response.status(200).json({
+            message: "Flashcard deleted...",
+            data: deletedFlashcard
+        })  
     } catch (error) {
         console.error(error)
         response.status(500).json({
