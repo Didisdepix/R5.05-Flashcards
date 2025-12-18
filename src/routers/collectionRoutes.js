@@ -10,7 +10,7 @@ router.post('/', createCollection)
 router.get('/:id', getCollection)
 router.get('/', getMyCollections)
 router.get('/research/:title', getCollectionsFromTitle)
-router.patch('/', modifyCollection)
-router.delete('/', deleteCollection)
+router.patch('/:id', modifyCollection)
+router.delete('/:id', deleteCollection)
 
 export default router
