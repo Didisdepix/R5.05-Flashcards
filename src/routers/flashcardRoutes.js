@@ -1,15 +1,19 @@
 import {Router} from 'express'
 import { createFlashcard, deleteFlashcard, getFlashcard, getFlashcards, getFlashcardsToLearn, learnFlashcard, modifyFlashcard } from '../controllers/flashcardController.js'
+import { validateBody, validateParams } from '../middlewares/validation.js'
+import { createFlashcardSchema, flashcardIdSchema, modifyFlashcardSchema } from '../models/flashcard.js'
 
 const router = Router({mergeParams: true})
 
-router.post("/", createFlashcard)
-router.get("/:id", getFlashcard)
+router.use(authenticateToken)
+
+router.post("/", validateBody(createFlashcardSchema), createFlashcard)
+router.get("/:id", validateParams(flashcardIdSchema), getFlashcard)
 router.get("/", getFlashcards)
 router.get("/revision", getFlashcardsToLearn)
 router.post("/revision/:id", learnFlashcard)
-router.patch("/", modifyFlashcard)
-router.delete("/", deleteFlashcard)
+router.patch("/", validateBody(modifyFlashcardSchema), modifyFlashcard)
+router.delete("/:id", validateParams(flashcardIdSchema), deleteFlashcard)
 
 
 export default router
