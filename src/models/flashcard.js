@@ -11,8 +11,8 @@ export const createFlashcardSchema = z.object ({
 export const modifyFlashcardSchema = z.object ({
     frontText: z.string().optional(),
     backText: z.string().optional(),
-    frontURL: z.url().optional(),
-    backURL: z.url().optional(),
+    frontURL: z.url().nullable().optional(),
+    backURL: z.url().nullable().optional(),
 })
 
 export const flashcardIdSchema = z.object({

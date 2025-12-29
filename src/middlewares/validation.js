@@ -22,7 +22,7 @@ export const validateBody = (schema) => {
 export const validateParams = (schema) => {
     return (req, res, next) => {
         try {
-            const test = schema.parse(req.params)
+            schema.parse(req.params)
             next()
         } catch (error) {
             if(error instanceof ZodError) {

@@ -30,7 +30,18 @@ export const createFlashcard = async (request, response) => {
 
 export const getFlashcard = async (request, response) => {
     try {
-        
+        const params = request.params
+        const [targetFlashcard] = await db.select().from(flashcard).where(eq(flashcard.id, params.id))
+        const [targetCollection] = await db.select().from(collection).where(eq(collection.id, targetFlashcard.collectionId))
+
+        if(!targetCollection.public && (targetCollection.userId != request.user.userId)) {
+            response.status(403).json({
+                error: "Unauthorized to get flashcard...",
+            })
+        }
+
+        response.status(201).json(targetFlashcard)
+
     } catch (error) {
         console.error(error)
         response.status(500).json({
@@ -63,7 +74,30 @@ export const getFlashcardsToLearn = async (request, response) => {
 
 export const modifyFlashcard = async (request, response) => {
     try {
+        const params = request.params
+        const body = request.body
+        const [targetFlashcard] = await db.select().from(flashcard).where(eq(flashcard.id, params.id))
+        const [targetCollection] = await db.select().from(collection).where(eq(collection.id, targetFlashcard.collectionId))
+
+        if( targetCollection.userId != request.user.userId ) {
+            response.status(403).json({
+                error: "Unauthorized to modify flashcard...",
+            })
+        }
+
+        console.log(body.frontURL)
+
+        const [modifiedFlashcard] = await db.update(flashcard).set({
+            frontText: body.frontText === undefined  ? targetFlashcard.frontText : body.frontText,
+            backText: body.backText === undefined ? targetFlashcard.backText : body.backText ,
+            frontURL: body.frontURL === undefined ? targetFlashcard.frontURL : body.frontURL ,
+            backURL: body.backURL === undefined ? targetFlashcard.backURL : body.backURL
+        }).where(eq(flashcard.id, targetFlashcard.id)).returning()
         
+        response.status(201).json({
+            message: "Flashcard modified successfully.",
+            data: modifiedFlashcard
+        })
     } catch (error) {
         console.error(error)
         response.status(500).json({
@@ -75,9 +109,7 @@ export const modifyFlashcard = async (request, response) => {
 export const deleteFlashcard = async (request, response) => {
     try {
         const params = request.params
-        console.log(params.id)
         const [targetFlashcard] = await db.select().from(flashcard).where(eq(flashcard.id, params.id))
-        console.log(targetFlashcard)
         const [targetCollection] = await db.select().from(collection).where(eq(collection.id, targetFlashcard.collectionId))
 
         if( targetCollection.userId != request.user.userId ) {
@@ -85,7 +117,9 @@ export const deleteFlashcard = async (request, response) => {
                 error: "Unauthorized to create flashcard...",
             })
         }
+
         const [deletedFlashcard] = await db.delete(flashcard).where(eq(flashcard.id, targetFlashcard.id)).returning()
+
         if(!deletedFlashcard) {
             return response.status(404).json({ error: "Flashcard not found..."})
         }
