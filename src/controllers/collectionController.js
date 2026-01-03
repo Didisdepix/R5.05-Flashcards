@@ -1,6 +1,6 @@
 import { like } from "drizzle-orm"
-import { db } from "../db/database"
-import { collection, user } from "../db/schema"
+import { db } from "../db/database.js"
+import { collection, user } from "../db/schema.js"
 
 export const createCollection = async (request, response) => {
     try{
