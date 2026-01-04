@@ -9,12 +9,14 @@ const router = Router()
 
 router.use(authenticateToken)
 
-router.use("/:id/flashcards", validateParams(collectionIdSchema), flashcardRoutes)
+// The order has an influence on the validate used ?
+router.get('/research', validateBody(researchSchema), getCollectionsFromTitle)
+router.get("/:id/flashcards", validateParams(collectionIdSchema), flashcardRoutes)
 
 router.post('/', validateBody(createCollectionSchema),createCollection)
 router.get('/:id', validateParams(collectionIdSchema), getCollection)
 router.get('/', getMyCollections)
-router.get('/research/:search', validateBody(researchSchema), getCollectionsFromTitle)
+
 router.patch('/:id', validateParams(modifyCollectionSchema),validateBody(modifyCollectionSchema), modifyCollection)
 router.delete('/:id', validateParams(collectionIdSchema), deleteCollection)
 

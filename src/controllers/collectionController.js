@@ -10,7 +10,7 @@ export const createCollection = async (request, response) => {
         const {title, description, isPublic} = request.body
         const owner = request.user.userId
 
-        const newCollection = await db.insert(collection).values({title,description, public: isPublic, userId:owner})
+        const newCollection = await db.insert(collection).values({title,description, public: isPublic, userId:owner}).returning
 
         response.status(201).send({message: "Collection created !"})
     }catch(error){
@@ -27,10 +27,10 @@ export const getCollection = async (request, response) => {
 
         const id = request.params
 
-        const [collec] = await db.select().from(collection).where(eq(collection.id, id))
+        const [collec] = await db.select().from(collection).where(eq(collection.id, id)).returning
 
         if(collec.userId != request.user.userId){
-            const [user] = await db.select().from(user).where(eq(user.id, request.user.userId))
+            const [user] = await db.select().from(user).where(eq(user.id, request.user.userId)).returning
             if(!user.admin){
                 response.status(403).json({
                     error:"User not authorized"
@@ -54,7 +54,7 @@ export const getMyCollections = async (request, response) => {
 
         const id = request.user.userId
 
-        const collecs = await db.select().from(collection).where(eq(collection.userId, id))
+        const collecs = await db.select().from(collection).where(eq(collection.userId, id)).returning
 
         response.send(200).json(collecs)
     }catch(error){
@@ -70,10 +70,10 @@ export const getCollectionsFromTitle = async (request, response) => {
     try{
         console.log("Retrieving collections...")
 
-        const str = request.params
+        const title = request.body.title
 
-        const collecs = await db.select().from(collection).where(eq(collection.public, 1), like(collection.title, `%${str}%`))
-
+        const collecs = await db.select().from(collection).where(eq(collection.public, 1), like(collection.title, `%${title}%`)).returning
+        console.log(collecs)
         response.send(200).json(collecs)
     }catch(error){
         console.error(error)
