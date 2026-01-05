@@ -72,9 +72,9 @@ export const getCollectionsFromTitle = async (request, response) => {
 
         const title = request.body.title
 
-        const collecs = await db.select().from(collection).where(eq(collection.public, 1), like(collection.title, `%${title}%`)).returning
-        console.log(collecs)
-        response.send(200).json(collecs)
+        const collecs = await db.select().from(collection).where(eq(collection.public, 1), like(collection.title, `%${title}%`))
+
+        response.status(200).json(collecs)
     }catch(error){
         console.error(error)
         response.status(500).json({
