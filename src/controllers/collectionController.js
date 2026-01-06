@@ -8,9 +8,10 @@ export const createCollection = async (request, response) => {
         console.log("Creating collection...")
 
         const {title, description, isPublic} = request.body
+        console.log(isPublic)
         const owner = request.user.userId
 
-        const newCollection = await db.insert(collection).values({title,description, public: isPublic, userId:owner})
+        const newCollection = await db.insert(collection).values({title,description, public:isPublic, userId:owner})
 
         response.status(201).send({message: "Collection created !"})
     }catch(error){
