@@ -3,7 +3,7 @@
 
 ## Contexte
 Cette application a été réalisée par Antoine Rabuté et Lucas Demaimay dans le cadre du cours R5.05 de BUT informatique
-Ce cours enseigne la maitrise des outils NodeJS, 
+Ce cours enseigne la maitrise des outils NodeJS, drizzle, zod 
 
 ## Objectif
 Cette application purement backend a pour objectif de permettre aux utilisateurs de réviser des "flashcards" et de les organiser en collections
