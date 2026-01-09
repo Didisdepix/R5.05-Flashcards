@@ -9,7 +9,7 @@ export const createCollectionSchema = z.object ({
 export const modifyCollectionSchema = z.object ({
     title: z.string().optional(),
     description: z.string().optional(),
-    isPublic: z.boolean().optional()
+    isPublic: z.int().optional()
 })
 
 export const collectionIdSchema = z.object({

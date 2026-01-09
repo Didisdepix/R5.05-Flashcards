@@ -88,12 +88,14 @@ export const getCollectionsFromTitle = async (request, response) => {
 export const modifyCollection = async (request, response) => {
     try{
         console.log("Modifying collection...")
-
+        console.log(0)
         const {title, description, isPublic} = request.body
         const id = request.params
-
-        await db.update(collection).set({title, description, public:isPublic}).where(eq(collection.id, id))
-
+        console.log(0.5)
+        console.log(id)
+        const [collec] = await db.select().from(collection).where(eq(collection.id, id.id))
+        console.log(collec)
+        console.log(1)
         if(collec.userId != request.user.userId){
             const [user] = await db.select().from(user).where(eq(user.id, request.user.userId))
             if(!user.admin){
@@ -102,6 +104,13 @@ export const modifyCollection = async (request, response) => {
                 })
             }
         }
+
+        console.log(2)
+        console.log(title)
+        console.log(description)
+        console.log(isPublic)
+
+        await db.update(collection).set({title, description, public:isPublic}).where(eq(collection.id, id.id))
 
         response.send(200)
     }catch(error){
