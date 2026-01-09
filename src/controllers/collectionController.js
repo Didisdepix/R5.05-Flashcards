@@ -28,7 +28,7 @@ export const getCollection = async (request, response) => {
 
         const id = request.params
 
-        const [collec] = await db.select().from(collection).where(eq(collection.id, id))
+        const [collec] = await db.select().from(collection).where(eq(collection.id, id.id))
 
         if(collec.userId != request.user.userId){
             const [user] = await db.select().from(user).where(eq(user.id, request.user.userId))
@@ -88,14 +88,12 @@ export const getCollectionsFromTitle = async (request, response) => {
 export const modifyCollection = async (request, response) => {
     try{
         console.log("Modifying collection...")
-        console.log(0)
+
         const {title, description, isPublic} = request.body
         const id = request.params
-        console.log(0.5)
-        console.log(id)
+
         const [collec] = await db.select().from(collection).where(eq(collection.id, id.id))
-        console.log(collec)
-        console.log(1)
+
         if(collec.userId != request.user.userId){
             const [user] = await db.select().from(user).where(eq(user.id, request.user.userId))
             if(!user.admin){
@@ -104,11 +102,6 @@ export const modifyCollection = async (request, response) => {
                 })
             }
         }
-
-        console.log(2)
-        console.log(title)
-        console.log(description)
-        console.log(isPublic)
 
         await db.update(collection).set({title, description, public:isPublic}).where(eq(collection.id, id.id))
 
@@ -128,7 +121,7 @@ export const deleteCollection = async (request, response) => {
 
         const id = request.params
 
-        await db.delete().from(collection).where(eq(collection.id, id))
+        const [collec] = await db.select().from(collection).where(eq(collection.id, id.id))
 
         if(collec.userId != request.user.userId){
             const [user] = await db.select().from(user).where(eq(user.id, request.user.userId))
@@ -139,7 +132,13 @@ export const deleteCollection = async (request, response) => {
             }
         }
 
-        console.log("Collection deleted !")
+        await db.delete(collection).where(eq(collection.id, id.id))
+
+        response.status(200).json(
+            {
+                message: "Collection deleted !"
+            }
+        )
     }catch(error){
         console.error(error)
         response.status(500).json({
