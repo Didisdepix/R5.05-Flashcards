@@ -8,7 +8,7 @@ import { eq } from "drizzle-orm"
 export const register = async (request, response) => {
     
     try {
-        const {email, name, surname, password} = request.body
+        const {email, name, surname, isAdmin,password} = request.body
 
         const hashedPassword = await hash(password, 15)
 
@@ -16,11 +16,13 @@ export const register = async (request, response) => {
             email,
             name,
             surname,
+            admin:isAdmin,
             password: hashedPassword
         }).returning({
             email: user.email,
             name: user.name,
             surname: user.surname,
+            admin: user.admin,
             id: user.id
         })
 

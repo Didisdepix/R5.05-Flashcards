@@ -31,8 +31,8 @@ export const getCollection = async (request, response) => {
         const [collec] = await db.select().from(collection).where(eq(collection.id, id.id))
 
         if(collec.userId != request.user.userId){
-            const [user] = await db.select().from(user).where(eq(user.id, request.user.userId))
-            if(!user.admin){
+            const [requestingUser] = await db.select().from(user).where(eq(user.id, request.user.userId))
+            if(!requestingUser.admin){
                 response.status(403).json({
                     error:"User not authorized"
                 })
@@ -95,12 +95,12 @@ export const modifyCollection = async (request, response) => {
         const [collec] = await db.select().from(collection).where(eq(collection.id, id.id))
 
         if(collec.userId != request.user.userId){
-            const [user] = await db.select().from(user).where(eq(user.id, request.user.userId))
-            if(!user.admin){
+            //const [requestingUser] = await db.select().from(user).where(eq(user.id, request.user.userId))
+            //if(!requestingUser.admin){
                 response.status(403).json({
                     error:"User not authorized"
                 })
-            }
+            //}
         }
 
         await db.update(collection).set({title, description, public:isPublic}).where(eq(collection.id, id.id))
@@ -124,12 +124,12 @@ export const deleteCollection = async (request, response) => {
         const [collec] = await db.select().from(collection).where(eq(collection.id, id.id))
 
         if(collec.userId != request.user.userId){
-            const [user] = await db.select().from(user).where(eq(user.id, request.user.userId))
-            if(!user.admin){
+            //const [requestingUser] = await db.select().from(user).where(eq(user.id, request.user.userId))
+            //if(!requestingUser.admin){
                 response.status(403).json({
                     error:"User not authorized"
                 })
-            }
+            //}
         }
 
         await db.delete(collection).where(eq(collection.id, id.id))
