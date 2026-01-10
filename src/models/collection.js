@@ -3,13 +3,13 @@ import { z } from 'zod'
 export const createCollectionSchema = z.object ({
     title: z.string(),
     description: z.string().optional(),
-    public: z.boolean()
+    isPublic: z.int()
 })
 
 export const modifyCollectionSchema = z.object ({
     title: z.string().optional(),
     description: z.string().optional(),
-    public: z.boolean().optional()
+    isPublic: z.int().optional()
 })
 
 export const collectionIdSchema = z.object({

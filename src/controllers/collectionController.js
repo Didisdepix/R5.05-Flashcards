@@ -1,15 +1,17 @@
-import { like } from "drizzle-orm"
-import { db } from "../db/database"
-import { collection, user } from "../db/schema"
+import { and, like } from "drizzle-orm"
+import { db } from "../db/database.js"
+import { collection, user } from "../db/schema.js"
+import { eq } from "drizzle-orm"
 
 export const createCollection = async (request, response) => {
     try{
         console.log("Creating collection...")
 
         const {title, description, isPublic} = request.body
+        console.log(isPublic)
         const owner = request.user.userId
 
-        const newCollection = await db.insert(collection).values({title,description, public: isPublic, userId:owner}).returning()
+        const newCollection = await db.insert(collection).values({title,description, public:isPublic, userId:owner})
 
         response.status(201).send({message: "Collection created !"})
     }catch(error){
@@ -26,10 +28,10 @@ export const getCollection = async (request, response) => {
 
         const id = request.params
 
-        const [collec] = await db.select().from(collection).where(eq(collection.id, id)).returning()
+        const [collec] = await db.select().from(collection).where(eq(collection.id, id.id))
 
         if(collec.userId != request.user.userId){
-            const [user] = await db.select().from(user).where(eq(user.id, request.user.userId)).returning()
+            const [user] = await db.select().from(user).where(eq(user.id, request.user.userId))
             if(!user.admin){
                 response.status(403).json({
                     error:"User not authorized"
@@ -37,7 +39,7 @@ export const getCollection = async (request, response) => {
             }
         }
 
-        response.send(200).json(collec)
+        response.status(200).json(collec)
     }catch(error){
         console.error(error)
         response.status(500).json({
@@ -53,9 +55,9 @@ export const getMyCollections = async (request, response) => {
 
         const id = request.user.userId
 
-        const collecs = await db.select().from(collection).where(eq(collection.userId, id)).returning()
+        const collecs = await db.select().from(collection).where(eq(collection.userId, id))
 
-        response.send(200).json(collecs)
+        response.status(200).json(collecs)
     }catch(error){
         console.error(error)
         response.status(500).json({
@@ -69,11 +71,11 @@ export const getCollectionsFromTitle = async (request, response) => {
     try{
         console.log("Retrieving collections...")
 
-        const str = request.params
+        const title = request.body.title
 
-        const collecs = await db.select().from(collection).where(eq(collection.public, 1), like(collection.title, `%${str}%`))
+        const collecs = await db.select().from(collection).where(and(eq(collection.public, 1), like(collection.title, `%${title}%`)))
 
-        response.send(200).json(collecs)
+        response.status(200).json(collecs)
     }catch(error){
         console.error(error)
         response.status(500).json({
@@ -90,16 +92,18 @@ export const modifyCollection = async (request, response) => {
         const {title, description, isPublic} = request.body
         const id = request.params
 
-        await db.update(collection).set({title, description, public:isPublic}).where(eq(collection.id, id)).returning()
+        const [collec] = await db.select().from(collection).where(eq(collection.id, id.id))
 
         if(collec.userId != request.user.userId){
-            const [user] = await db.select().from(user).where(eq(user.id, request.user.userId)).returning()
+            const [user] = await db.select().from(user).where(eq(user.id, request.user.userId))
             if(!user.admin){
                 response.status(403).json({
                     error:"User not authorized"
                 })
             }
         }
+
+        await db.update(collection).set({title, description, public:isPublic}).where(eq(collection.id, id.id))
 
         response.send(200)
     }catch(error){
@@ -117,10 +121,10 @@ export const deleteCollection = async (request, response) => {
 
         const id = request.params
 
-        await db.delete().from(collection).where(eq(collection.id, id))
+        const [collec] = await db.select().from(collection).where(eq(collection.id, id.id))
 
         if(collec.userId != request.user.userId){
-            const [user] = await db.select().from(user).where(eq(user.id, request.user.userId)).returning()
+            const [user] = await db.select().from(user).where(eq(user.id, request.user.userId))
             if(!user.admin){
                 response.status(403).json({
                     error:"User not authorized"
@@ -128,7 +132,13 @@ export const deleteCollection = async (request, response) => {
             }
         }
 
-        console.log("Collection deleted !")
+        await db.delete(collection).where(eq(collection.id, id.id))
+
+        response.status(200).json(
+            {
+                message: "Collection deleted !"
+            }
+        )
     }catch(error){
         console.error(error)
         response.status(500).json({
