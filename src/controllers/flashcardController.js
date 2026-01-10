@@ -50,28 +50,6 @@ export const getFlashcard = async (request, response) => {
     }
 }
 
-export const getFlashcards = async (request, response) => {
-    try {
-        
-    } catch (error) {
-        console.error(error)
-        response.status(500).json({
-            error: "Failed to get flashcards..."
-        })
-    }
-}
-
-export const getFlashcardsToLearn = async (request, response) => {
-    try {
-        
-    } catch (error) {
-        console.error(error)
-        response.status(500).json({
-            error: "Failed to get flashcards to learn..."
-        })
-    }
-}
-
 export const modifyFlashcard = async (request, response) => {
     try {
         const params = request.params
