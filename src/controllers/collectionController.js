@@ -8,7 +8,7 @@ export const createCollection = async (request, response) => {
         console.log("Creating collection...")
 
         const {title, description, isPublic} = request.body
-        console.log(isPublic)
+
         const owner = request.user.userId
 
         const newCollection = await db.insert(collection).values({title,description, public:isPublic, userId:owner})
@@ -132,13 +132,19 @@ export const deleteCollection = async (request, response) => {
             //}
         }
 
-        await db.delete(collection).where(eq(collection.id, id.id))
+        const [collectionToDelete] = await db.delete(collection).where(eq(collection.id, id.id)).returning()
+        if(!collectionToDelete){
+            response.status(404).json({
+                Message:"Collection does not exist"
+            })
+        }else{
 
-        response.status(200).json(
-            {
-                message: "Collection deleted !"
-            }
-        )
+            response.status(200).json(
+                {
+                    message: "Collection deleted !"
+                }
+            )
+        }
     }catch(error){
         console.error(error)
         response.status(500).json({
