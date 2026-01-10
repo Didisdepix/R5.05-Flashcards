@@ -15,6 +15,11 @@ export const modifyFlashcardSchema = z.object ({
     backURL: z.url().nullable().optional(),
 })
 
+export const learnlashcardSchema = z.object({
+    flashcardId: z.uuid(),
+    level: z.number().int().min(1).max(5)
+})
+
 export const flashcardIdSchema = z.object({
     id: z.uuid()
 })

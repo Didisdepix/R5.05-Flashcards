@@ -12,7 +12,7 @@ router.post("/", validateBody(createFlashcardSchema), createFlashcard)
 router.get("/:id", validateParams(flashcardIdSchema), getFlashcard)
 router.get("/", getFlashcards)
 router.get("/revision", getFlashcardsToLearn)
-router.post("/revision/:id", learnFlashcard)
+router.post("/revision", learnFlashcard)
 router.patch("/:id",  validateParams(flashcardIdSchema), validateBody(modifyFlashcardSchema), modifyFlashcard)
 router.delete("/:id", validateParams(flashcardIdSchema), deleteFlashcard)
 
