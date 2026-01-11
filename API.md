@@ -89,4 +89,35 @@ All flashcard routes are mounted under `/collections/:collectionId` and use `mer
   - Auth: Authenticated — owner or admin required for private collections.
   - Route params: `collectionId` (UUID).
 
+Flashcards (non-nested)
+-----------------------
+
+These routes are mounted at `/flashcards` and operate on individual flashcards, with ownership checks based on the associated collection.
+
+- **POST /flashcards/**
+  - Purpose: Create a flashcard (requires `collectionId` in body).
+  - Auth: Authenticated — collection owner required.
+  - Body (JSON): `frontText` (string), `backText` (string), `frontURL` (url, optional), `backURL` (url, optional), `collectionId` (UUID).
+
+- **POST /flashcards/revision**
+  - Purpose: Submit or update a learning/revision record for a flashcard.
+  - Auth: Authenticated — collection owner required for private collections; public collections accept any authenticated user.
+  - Body (JSON): `flashcardId` (UUID), `level` (int, 1–5).
+
+- **GET /flashcards/:id**
+  - Purpose: Get a specific flashcard.
+  - Auth: Authenticated — allowed if associated collection is public or if requester is owner/admin.
+  - Route params: `id` (UUID).
+
+- **PATCH /flashcards/:id**
+  - Purpose: Modify a flashcard.
+  - Auth: Authenticated — collection owner required.
+  - Route params: `id` (UUID).
+  - Body (JSON): `frontText` (string, optional), `backText` (string, optional), `frontURL` (url, nullable/optional), `backURL` (url, nullable/optional).
+
+- **DELETE /flashcards/:id**
+  - Purpose: Delete a flashcard.
+  - Auth: Authenticated — collection owner required.
+  - Route params: `id` (UUID).
+
 
