@@ -1,6 +1,6 @@
 import { and, eq, lte, or } from "drizzle-orm";
 import { db } from "../db/database.js";
-import { collection, flashcard, revision } from "../db/schema.js";
+import { collection, flashcard, revision, user } from "../db/schema.js";
 
 export const getFlashcards = async (request, response) => {
   try {
@@ -11,9 +11,11 @@ export const getFlashcards = async (request, response) => {
       .from(collection)
       .where(eq(collection.id, params.id));
 
+    const [requestingUser] = await db.select().from(user).where(eq(user.id, request.user.userId))
+
     if (
       !targetCollection.public &&
-      targetCollection.userId != request.user.userId
+      targetCollection.userId != request.user.userId && !requestingUser.admin
     ) {
       response.status(403).json({
         error: "Unauthorized to get flashcards...",
@@ -43,7 +45,9 @@ export const getFlashcardsToLearn = async (request, response) => {
       .from(collection)
       .where(eq(collection.id, params.id));
 
-    if (targetCollection.userId != request.user.userId) {
+    const [requestingUser] = await db.select().from(user).where(eq(user.id, request.user.userId))
+
+    if (targetCollection.userId != request.user.userId && !requestingUser.admin) {
       response.status(403).json({
         error: "Unauthorized to get flashcards...",
       });

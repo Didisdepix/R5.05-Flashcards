@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm"
 import { db } from "../db/database.js"
-import { collection, flashcard, revision } from "../db/schema.js"
+import { collection, flashcard, revision, user } from "../db/schema.js"
 
 export const createFlashcard = async (request, response) => {
     try {
@@ -34,7 +34,9 @@ export const getFlashcard = async (request, response) => {
         const [targetFlashcard] = await db.select().from(flashcard).where(eq(flashcard.id, params.id))
         const [targetCollection] = await db.select().from(collection).where(eq(collection.id, targetFlashcard.collectionId))
 
-        if(!targetCollection.public && (targetCollection.userId != request.user.userId)) {
+        const [requestingUser] = await db.select().from(user).where(eq(user.id, request.user.userId))
+
+        if(!targetCollection.public && (targetCollection.userId != request.user.userId) && !requestingUser.admin) {
             response.status(403).json({
                 error: "Unauthorized to get flashcard...",
             })
