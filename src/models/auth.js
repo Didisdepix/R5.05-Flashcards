@@ -4,6 +4,7 @@ export const registerSchema = z.object({
     email: z.email(),
     name: z.string(),
     surname: z.string(),
+    isAdmin: z.int().optional(),
     password: z.string().min(8, 'Password must be at least 8 characters long').max(255, 'Password can not exceed 255 characters'),
 })
 

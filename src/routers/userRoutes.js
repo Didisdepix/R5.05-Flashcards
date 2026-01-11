@@ -10,6 +10,6 @@ router.use(authenticateToken)
 
 router.get("/", getUsers)
 router.get("/:id", validateParams(userIdSchema), getUser)
-router.delete("/", deleteUser)
+router.delete("/:id", deleteUser)
 
 export default router
