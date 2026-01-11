@@ -4,8 +4,6 @@ import { authenticateToken } from '../middlewares/autenticateToken.js'
 
 const router = Router({mergeParams: true})
 
-router.use(authenticateToken)
-
 router.get("/revision", getFlashcardsToLearn)
 router.get("/flashcards", getFlashcards)
 

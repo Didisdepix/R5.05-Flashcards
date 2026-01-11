@@ -9,7 +9,7 @@ const router = Router()
 
 router.use(authenticateToken)
 
-router.use("/:collectionId/", validateParams(collectionIdSchema), flashcardRoutes)
+router.use("/:id", validateParams(collectionIdSchema), flashcardRoutes)
 
 router.post('/', validateBody(createCollectionSchema),createCollection)
 router.get('/:id', validateParams(collectionIdSchema), getCollection)
