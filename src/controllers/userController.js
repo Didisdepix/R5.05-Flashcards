@@ -15,11 +15,12 @@ export const getUsers = async (request, response) => {
             response.status(403).json({
                     error:"User not authorized"
             })
+        }else{
+
+            const users = await db.select().from(user).orderBy(user.createdAt)
+
+            response.status(200).json(users)
         }
-
-        const users = await db.select().from(user).orderBy(user.createdAt)
-
-        response.status(200).json(users)
     }catch(error){
         console.error(error)
         response.status(500).json({
@@ -38,11 +39,12 @@ export const getUser = async (request, response) => {
             response.status(403).json({
                     error:"User not authorized"
             })
+        }else{
+
+            const [users] = await db.select().from(user).where(eq(user.id, id.id))
+
+            response.status(200).json(users)
         }
-
-        const [users] = await db.select().from(user).where(eq(user.id, id.id))
-
-        response.status(200).json(users)
     }catch(error){
         console.error(error)
         response.status(500).json({
@@ -61,18 +63,19 @@ export const deleteUser = async (request, response) => {
             response.status(403).json({
                     error:"User not authorized"
             })
-        }
-
-        const [userToDelete] = await db.delete(user).where(eq(user.id, id.id)).returning()
-        if(!userToDelete){
-            response.status(404).json({
-                Message:"User does not exist"
-            })
         }else{
 
-            response.status(200).json({
-                Message: "User deleted"
-            })
+            const [userToDelete] = await db.delete(user).where(eq(user.id, id.id)).returning()
+            if(!userToDelete){
+                response.status(404).json({
+                    Message:"User does not exist"
+                })
+            }else{
+
+                response.status(200).json({
+                    Message: "User deleted"
+                })
+            }
         }
     }catch(error){
         console.error(error)

@@ -37,9 +37,10 @@ export const getCollection = async (request, response) => {
                     error:"User not authorized"
                 })
             }
-        }
+        }else{
 
-        response.status(200).json(collec)
+            response.status(200).json(collec)
+        }
     }catch(error){
         console.error(error)
         response.status(500).json({
@@ -101,9 +102,10 @@ export const modifyCollection = async (request, response) => {
                     error:"User not authorized"
                 })
             //}
-        }
+        }else{
 
-        await db.update(collection).set({title, description, public:isPublic}).where(eq(collection.id, id.id))
+            await db.update(collection).set({title, description, public:isPublic}).where(eq(collection.id, id.id))
+        }
 
         response.send(200)
     }catch(error){
@@ -130,20 +132,22 @@ export const deleteCollection = async (request, response) => {
                     error:"User not authorized"
                 })
             //}
-        }
-
-        const [collectionToDelete] = await db.delete(collection).where(eq(collection.id, id.id)).returning()
-        if(!collectionToDelete){
-            response.status(404).json({
-                Message:"Collection does not exist"
-            })
         }else{
 
-            response.status(200).json(
-                {
-                    message: "Collection deleted !"
-                }
-            )
+            const [collectionToDelete] = await db.delete(collection).where(eq(collection.id, id.id)).returning()
+            
+            if(!collectionToDelete){
+                response.status(404).json({
+                    Message:"Collection does not exist"
+                })
+            }else{
+
+                response.status(200).json(
+                    {
+                        message: "Collection deleted !"
+                    }
+                )
+            }
         }
     }catch(error){
         console.error(error)
