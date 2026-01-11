@@ -40,7 +40,7 @@ export const getFlashcard = async (request, response) => {
             })
         }
 
-        response.status(201).json(targetFlashcard)
+        response.status(200).json(targetFlashcard)
 
     } catch (error) {
         console.error(error)
@@ -62,8 +62,6 @@ export const modifyFlashcard = async (request, response) => {
                 error: "Unauthorized to modify flashcard...",
             })
         }
-
-        console.log(body.frontURL)
 
         const [modifiedFlashcard] = await db.update(flashcard).set({
             frontText: body.frontText === undefined  ? targetFlashcard.frontText : body.frontText,
@@ -125,10 +123,6 @@ export const learnFlashcard = async (request, response) => {
             })
         }
 
-        console.log(body.flashcardId)
-        console.log(request.user.userId)
-        console.log(body.level)
-
         const [learnedFlashcard] = await db.insert(revision).values({
             flashcardId: body.flashcardId,
             userId: request.user.userId,
@@ -140,8 +134,6 @@ export const learnFlashcard = async (request, response) => {
                 lastRevisionDate: new Date(),
             }
         }).returning()
-
-        console.log("hello")
 
         response.status(200).json({
             message: "Flashcard learned.",
